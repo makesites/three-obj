@@ -1,0 +1,22 @@
+{
+    "name" : "three-obj",
+    "version" : "0.0.1",
+	"author": "makesites",
+	"description": "[WIP] Compiling 3D OBJ files to Three.js JSON, as a node module",
+	"homepage": "https://github.com/makesites/three-obj",
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/makesites/three-obj.git"
+	},
+	"licenses": [
+		{
+		"type": "MIT license",
+		"url": "http://makesites.org/licenses/MIT"
+		}
+	],
+	"engine" : {
+        "node" : "0.8.x"
+    }, 
+	"dependencies" : {
+	}
+}
