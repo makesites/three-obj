@@ -1,8 +1,8 @@
 {
     "name" : "three-obj",
-    "version" : "0.0.2",
+    "version" : "0.0.4",
 	"author": "makesites",
-	"description": "[WIP] Compiling 3D OBJ files to Three.js JSON, as a node module",
+	"description": "Compiling 3D OBJ files to Three.js JSON, as a node module",
 	"homepage": "https://github.com/makesites/three-obj",
 	"repository": {
 		"type": "git",
