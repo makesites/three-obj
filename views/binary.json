@@ -1,0 +1,20 @@
+{
+
+    "metadata" :
+    {
+        "formatVersion" : {{version}},
+        "sourceFile"    : "{{files}}",
+        "generatedBy"   : "three-obj",
+        "vertices"      : {{verticesNum}},
+        "faces"         : {{faceNum}},
+        "normals"       : {{normalNum}},
+        "colors"        : {{colorNum}},
+        "uvs"           : {{uvNum}},
+        "materials"     : {{materialNum}}
+    },
+
+	"materials": [{{materials}}],
+	
+	"buffers": "{{buffers}}"
+	
+}

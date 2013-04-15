@@ -1,0 +1,34 @@
+{
+
+    "metadata" :
+    {
+        "formatVersion" : {{version}},
+        "sourceFile"    : "{{files}}",
+        "generatedBy"   : "three-obj",
+        "vertices"      : {{verticesNum}},
+        "faces"         : {{faceNum}},
+        "normals"       : {{normalNum}},
+        "colors"        : {{colorNum}},
+        "uvs"           : {{uvNum}},
+        "materials"     : {{materialNum}}
+    },
+
+    "scale" : {{scale}},
+
+    "materials": [{{materials}}],
+
+    "vertices": [{{vertices}}],
+
+    "morphTargets": [{{morphTargets}}],
+
+    "morphColors": [{{morphColors}}],
+
+    "normals": [{{normals}}],
+
+    "colors": [{{colors}}],
+
+    "uvs": [[{{uvs}}]],
+
+    "faces": [{{faces}}]
+
+}
