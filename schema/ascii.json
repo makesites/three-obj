@@ -15,7 +15,7 @@
 
     "scale" : {{scale}},
 
-    "materials": [{{materials}}],
+    "materials": {{materials}},
 
     "vertices": [{{vertices}}],
 
