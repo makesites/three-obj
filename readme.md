@@ -32,9 +32,41 @@ View the [examples](./examples) folder for more specific use cases
 
 ## Methods
 
-### load(file, callback)
+These are the main methods to interact with the lib
 
-Loads the OBJ file and returns the JSON ojbect
+### load( file, callback )
+
+Loads an OBJ file and creates a JavaScript object
+
+### convert( source, destination, callback )
+
+One liner to load & output to ascii JSON  
+
+### minify( source, destination, callback) [WIP]
+
+Same as ```convert``` but saves to binary format
+
+### set( options)
+
+Update the options used during the processing (like scale, shading, align). 
+
+
+## Internal methods
+
+In addition there are some methods used internally that you might want to use at certain cases: 
+
+### parse( obj ) 
+
+Accepts a raw OBJ file and returns it as a JavaScript object
+
+### compress( json , callback) [WIP]
+
+Get the JSON input and convert it to binary format
+
+### output( json, callback )
+
+Simply saves the data to a JSON file. 
+
 
 
 ## Credits
