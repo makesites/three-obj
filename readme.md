@@ -13,17 +13,15 @@ npm install three-obj
 
 Include to a script as a dependency
 ```
-var threeOBJ = require("../three-obj");
-
+var threeOBJ = require("three-obj");
 ```
 then load any OBJ file to convert it to a JSON object
 ```
 threeOBJ.load("obj/palm.obj", function( response ){
 	
-	console.log("JSON:", response );
+	console.log("DATA:", response );
 	
 });
-
 ```
 Note that the MTL file is currently expected to be is the same folder. 
 
