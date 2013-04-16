@@ -1,4 +1,3 @@
-
 # Three OBJ
 
 A node module to convert OBJ files to Three.js JSON format
@@ -40,10 +39,10 @@ Loads the OBJ file and returns the JSON ojbect
 
 ## Credits
 
-Created by [Makis Tracend]( [@tracend](http://twitter.com/tracend) )
+Created by Makis Tracend ( [@tracend](http://twitter.com/tracend) )
 
 Based on: [OBJLoader](https://github.com/mrdoob/three.js/blob/master/examples/js/loaders/OBJLoader.js), [MTLLoader](https://github.com/mrdoob/three.js/blob/master/examples/js/loaders/MTLLoader.js), [convert_obj_three](https://github.com/mrdoob/three.js/blob/master/utils/converters/obj/convert_obj_three.py)
 
 Distributed through [Makesites.org](http://makesites.org/)
 
-Released under the MIT license](http://makesites.org/licenses/MIT)
+Released under the [MIT license](http://makesites.org/licenses/MIT)
