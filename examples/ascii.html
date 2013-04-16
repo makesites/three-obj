@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js webgl - node.js - OBJ converter</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				background:#fff;
+				padding:0;
+				margin:0;
+				overflow:hidden;
+				font-family:georgia;
+				text-align:center;
+			}
+			h1 { }
+			a { color:darkblue }
+			canvas { pointer-events:none; z-index:10; }
+
+			#d { text-align:center; margin:1em 0 -9.2em 0; z-index:0; position:relative; display:block }
+			.button { background:#000; color:#fff; padding:0.2em 0.5em; cursor:pointer }
+			.inactive { background:#999; color:#eee }
+		</style>
+	</head>
+
+	<body>
+		<div id="d">
+			<h1><a href="https://npmjs.org/package/three-obj">three-obj</a> converter test</h1>
+
+			<p>Module by <a href="http://makesites.org">Makesites</a> - Model by <a href="http://blog.dreamway.co">Dreamway</a>.
+		</div>
+
+		<script src="//cdnjs.cloudflare.com/ajax/libs/three.js/r57/three.min.js"></script>
+
+		<script>
+
+			var SCREEN_WIDTH = window.innerWidth;
+			var SCREEN_HEIGHT = window.innerHeight;
+			var FLOOR = -250;
+
+			var container;
+
+			var camera, scene;
+			var canvasRenderer, webglRenderer;
+
+			var mesh, zmesh, geometry;
+
+			var mouseX = 0, mouseY = 0;
+
+			var windowHalfX = window.innerWidth / 2;
+			var windowHalfY = window.innerHeight / 2;
+
+			var render_gl = 1;
+			var has_gl = 0;
+
+			document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+
+			init();
+			animate();
+
+
+			function init() {
+
+				container = document.createElement( 'div' );
+				document.body.appendChild( container );
+
+				camera = new THREE.PerspectiveCamera( 75, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 100000 );
+				camera.position.z = 300;
+
+				scene = new THREE.Scene();
+
+				// GROUND
+
+				var x = document.createElement( "canvas" );
+				var xc = x.getContext("2d");
+				x.width = x.height = 128;
+				xc.fillStyle = "#fff";
+				xc.fillRect(0, 0, 128, 128);
+				xc.fillStyle = "#000";
+				xc.fillRect(0, 0, 64, 64);
+				xc.fillStyle = "#999";
+				xc.fillRect(32, 32, 32, 32);
+				xc.fillStyle = "#000";
+				xc.fillRect(64, 64, 64, 64);
+				xc.fillStyle = "#555";
+				xc.fillRect(96, 96, 32, 32);
+
+				var xm = new THREE.MeshBasicMaterial( { map: new THREE.Texture( x, new THREE.UVMapping(), THREE.RepeatWrapping, THREE.RepeatWrapping ) } );
+				xm.map.needsUpdate = true;
+				xm.map.repeat.set( 10, 10 );
+
+				geometry = new THREE.PlaneGeometry( 100, 100, 15, 10 );
+
+				mesh = new THREE.Mesh( geometry, xm );
+				mesh.position.set( 0, FLOOR, 0 );
+				mesh.rotation.x = - Math.PI / 2;
+				mesh.scale.set( 10, 10, 10 );
+				scene.add( mesh );
+
+
+				// LIGHTS
+
+				var ambient = new THREE.AmbientLight( 0x221100 );
+				scene.add( ambient );
+
+				var directionalLight = new THREE.DirectionalLight( 0xffeedd );
+				directionalLight.position.set( 0, -70, 100 ).normalize();
+				scene.add( directionalLight );
+
+				// RENDERER
+
+
+				try {
+
+					webglRenderer = new THREE.WebGLRenderer();
+					webglRenderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
+					webglRenderer.domElement.style.position = "relative";
+
+					container.appendChild( webglRenderer.domElement );
+
+					has_gl = 1;
+
+				}
+				catch (e) {
+				}
+
+				
+
+				var loader = new THREE.JSONLoader();
+				
+				loader.load( "ascii/palm.js", function ( geometry, materials ) { 
+					// set opacity 
+					for( var i in materials ){
+						// limit to only the leaves?
+						materials[i].transparent = true;
+					}
+					createScene( geometry, materials, 0, FLOOR, 50, 105 ) 
+				});
+				
+				
+			}
+
+			function createScene( geometry, materials, x, y, z, b ) {
+
+				zmesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
+				zmesh.position.set( x, y, z );
+				zmesh.scale.set( 3, 3, 3 );
+				scene.add( zmesh );
+
+				createMaterialsPalette( materials, 100, b );
+
+			}
+
+			function createMaterialsPalette( materials, size, bottom ) {
+
+				for ( var i = 0; i < materials.length; i ++ ) {
+
+					// material
+
+					mesh = new THREE.Mesh( new THREE.PlaneGeometry( size, size ), materials[i] );
+					mesh.position.x = i * (size + 5) - ( ( materials.length - 1 )* ( size + 5 )/2);
+					mesh.position.y = FLOOR + size/2 + bottom;
+					mesh.position.z = -100;
+					scene.add( mesh );
+
+					// number
+
+					var x = document.createElement( "canvas" );
+					var xc = x.getContext( "2d" );
+					x.width = x.height = 128;
+					xc.shadowColor = "#000";
+					xc.shadowBlur = 7;
+					xc.fillStyle = "orange";
+					xc.font = "50pt arial bold";
+					xc.fillText( i, 10, 64 );
+
+					var xm = new THREE.MeshBasicMaterial( { map: new THREE.Texture( x ), transparent: true } );
+					xm.map.needsUpdate = true;
+
+					mesh = new THREE.Mesh( new THREE.PlaneGeometry( size, size ), xm );
+					mesh.position.x = i * ( size + 5 ) - ( ( materials.length - 1 )* ( size + 5 )/2);
+					mesh.position.y = FLOOR + size/2 + bottom;
+					mesh.position.z = -99;
+					scene.add( mesh );
+
+				}
+
+			}
+
+			function onDocumentMouseMove(event) {
+
+				mouseX = ( event.clientX - windowHalfX );
+				mouseY = ( event.clientY - windowHalfY );
+
+			}
+
+			//
+
+			function animate() {
+
+				requestAnimationFrame( animate );
+
+				render();
+
+			}
+
+			function render() {
+
+				camera.position.x += ( mouseX - camera.position.x ) * .02;
+				camera.position.y += ( - mouseY - camera.position.y ) * .02;
+
+				camera.lookAt( scene.position );
+
+				webglRenderer.render( scene, camera );
+				
+			}
+
+		</script>
+
+	</body>
+</html>

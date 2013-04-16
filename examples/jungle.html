@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js webgl - node.js - obj</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				font-family: Monospace;
+				background-color: #000000;
+				margin: 0px;
+				overflow: hidden;
+			}
+
+			#info {
+				color: #fff;
+				position: absolute;
+				top: 10px;
+				width: 100%;
+				text-align: center;
+				z-index: 100;
+				display:block;
+
+			}
+
+			a { color: red }
+
+			#stats { position: absolute; top:0; left: 0 }
+			#stats #fps { background: transparent !important }
+			#stats #fps #fpsText { color: #aaa !important }
+			#stats #fps #fpsGraph { display: none }
+		</style>
+	</head>
+
+	<body>
+		<div id="info">
+			<a href="http://threejs.org" target="_blank">three.js</a> -
+			middleware <a href="https://npmjs.org/package/three-obj" target="_blank">three-obj</a>
+			model by <a href="http://blog.dreamway.co" target="_blank">dreamway</a>
+		</div>
+
+		<script src="//cdnjs.cloudflare.com/ajax/libs/three.js/r57/three.min.js"></script>
+		
+		<script src="//rawgithub.com/mrdoob/three.js/master/examples/js/libs/stats.min.js"></script>
+
+		<script>
+
+			var container, stats;
+
+			var camera, scene, renderer, objects;
+			var particleLight, pointLight;
+			var mesh, skin;
+
+			var clock = new THREE.Clock();
+			
+			init();
+			animate();
+			
+			function init() {
+
+				container = document.createElement( 'div' );
+				document.body.appendChild( container );
+
+				camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1, 2000 );
+				//camera.position.set( 2, 4, 5 );
+				//camera.position.z = 300;
+				camera.position.set( 200, 100, 500 );
+
+				scene = new THREE.Scene();
+				scene.fog = new THREE.FogExp2( 0x000000, .005 );
+
+				// Add OBJ converted json model
+
+				var loader = new THREE.JSONLoader();
+				loader.load( 'ascii/palm.js', function ( geometry, materials ) {
+
+					// adjust leaves
+					var material = materials[ 1 ];
+					material.transparent = true;
+					
+					var faceMaterial = new THREE.MeshFaceMaterial( materials );
+
+					for ( var i = 0; i < 30; i ++ ) {
+
+						// random placement in a grid
+
+						var x = ( ( i % 27 )  - 13.5 ) * 2 + THREE.Math.randFloatSpread( 300 );
+						var z = ( Math.floor( i / 27 ) - 13.5 ) * 2 + THREE.Math.randFloatSpread( 300 );
+						
+						// create meshes
+						var mesh = new THREE.Mesh( geometry, faceMaterial );
+
+						var s = THREE.Math.randFloat( .75, 1 );
+						mesh.scale.set( s, s, s );
+
+						mesh.position.set( x, 0, z );
+						mesh.rotation.y = THREE.Math.randFloat( -0.25, 0.25 );
+
+						mesh.matrixAutoUpdate = false;
+						mesh.updateMatrix();
+
+						scene.add( mesh );
+						
+					}
+
+				} );
+
+
+				// Lights
+
+				var ambient = new THREE.AmbientLight( 0xcccccc );
+				scene.add( ambient );
+
+				var directionalLight = new THREE.DirectionalLight( 0xffeedd );
+				directionalLight.position.set( 0, -70, 100 ).normalize();
+				scene.add( directionalLight );
+
+	
+			// Renderer
+
+				renderer = new THREE.WebGLRenderer();
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+				container.appendChild( renderer.domElement );
+
+				// Stats
+
+				stats = new Stats();
+				container.appendChild( stats.domElement );
+
+			}
+
+
+			//
+
+			var t = 0;
+			function animate() {
+
+				requestAnimationFrame( animate );
+
+				render();
+				stats.update();
+
+			}
+
+			function render() {
+
+				var timer = Date.now() * 0.0005;
+
+				camera.position.x = Math.cos( timer ) * 100;
+				camera.position.y = 100;
+				camera.position.z = Math.sin( timer ) * 100;
+
+				camera.lookAt( scene.position );
+
+				renderer.render( scene, camera );
+
+			}
+
+		</script>
+	</body>
+</html>

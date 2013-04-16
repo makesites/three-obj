@@ -1,0 +1,36 @@
+# 
+# Wavefront material file
+# Model © Dreamway: http://dreamway.co
+# 
+
+newmtl trunk
+Ka 0.117647 0.117647 0.117647
+Kd 1 1 1
+Ks 1 1 1
+illum 2
+Ns 8
+map_Kd img/palm_bark.png
+map_bump img/palm_bark_norm.png
+bump img/palm_bark_norm.png
+map_opacity 
+map_d 
+refl 
+map_kS img/palm_bark_spec.png
+map_kA 
+map_Ns 
+
+newmtl branches
+Ka 0.117647 0.117647 0.117647
+Kd 1 1 1
+Ks 1 1 1
+illum 2
+Ns 8
+map_Kd img/palm_leafs.png
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS img/palm_leafs_spec.png
+map_kA 
+map_Ns 
