@@ -40,7 +40,7 @@ Loads an OBJ file and creates a JavaScript object
 
 One liner to load & output to ascii JSON  
 
-### minify( source, destination, callback) [WIP]
+### minify( source, destination, callback)
 
 Same as ```convert``` but saves to binary format
 
@@ -57,7 +57,7 @@ In addition there are some methods used internally that you might want to use at
 
 Accepts a raw OBJ file and returns it as a JavaScript object
 
-### compress( json , callback) [WIP]
+### compress( json , callback)
 
 Get the JSON input and convert it to binary format
 
