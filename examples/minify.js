@@ -1,4 +1,4 @@
-var threeOBJ = require("../index"),
+var threeOBJ = require("../index")(),
 	fs = require("fs");
 
 //threeOBJ.set({ shading: "flat" });

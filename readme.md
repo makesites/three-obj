@@ -4,7 +4,7 @@ A node module to convert OBJ files to Three.js JSON format
 
 ## Install
 
-Using npm: 
+Using npm:
 ```
 npm install three-obj
 ```
@@ -13,17 +13,19 @@ npm install three-obj
 
 Include to a script as a dependency
 ```
-var threeOBJ = require("three-obj");
+var threeOBJ = require("three-obj")( options );
 ```
+where options can be an bject to override the defaults
+
 then load any OBJ file to convert it to a JSON object
 ```
 threeOBJ.load("obj/palm.obj", function( response ){
-	
+
 	console.log("DATA:", response );
-	
+
 });
 ```
-Note that the MTL file is currently expected to be is the same folder. 
+Note that the MTL file is currently expected to be is the same folder.
 
 View the [examples](./examples) folder for more specific use cases
 
@@ -38,7 +40,7 @@ Loads an OBJ file and creates a JavaScript object
 
 ### convert( source, destination, callback )
 
-One liner to load & output to ascii JSON  
+One liner to load & output to ascii JSON
 
 ### minify( source, destination, callback)
 
@@ -46,14 +48,14 @@ Same as ```convert``` but saves to binary format
 
 ### set( options)
 
-Update the options used during the processing (like scale, shading, align). 
+Update the options used during the processing (like scale, shading, align).
 
 
 ## Internal methods
 
-In addition there are some methods used internally that you might want to use at certain cases: 
+In addition there are some methods used internally that you might want to use at certain cases:
 
-### parse( obj ) 
+### parse( obj )
 
 Accepts a raw OBJ file and returns it as a JavaScript object
 
@@ -63,7 +65,7 @@ Get the JSON input and convert it to binary format
 
 ### output( json, callback )
 
-Simply saves the data to a JSON file. 
+Simply saves the data to a JSON file.
 
 
 
