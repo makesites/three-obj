@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js webgl - node.js - OBJ converter</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				background:#fff;
+				padding:0;
+				margin:0;
+				overflow:hidden;
+				font-family:georgia;
+				text-align:center;
+			}
+			h1 { }
+			a { color:darkblue }
+			canvas { pointer-events:none; z-index:10; }
+
+			#d { text-align:center; margin:1em 0 -9.2em 0; z-index:0; position:relative; display:block }
+			.button { background:#000; color:#fff; padding:0.2em 0.5em; cursor:pointer }
+			.inactive { background:#999; color:#eee }
+		</style>
+	</head>
+
+	<body>
+		<div id="d">
+			<h1><a href="https://npmjs.org/package/three-obj">three-obj</a> converter test</h1>
+
+			<p>Module by <a href="http://makesites.org">Makesites</a> - Model by <a href="http://blog.dreamway.co">Dreamway</a>.
+		</div>
+
+		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/three.js/r58/three.min.js"></script>
+        <script type="text/javascript" src="//threejs.org/examples/js/controls/TrackballControls.js"></script>
+
+		<script>
+
+			var SCREEN_WIDTH = window.innerWidth;
+			var SCREEN_HEIGHT = window.innerHeight;
+			var FLOOR = -250;
+
+			var container;
+
+			var camera, scene, controls;
+			var canvasRenderer, webglRenderer;
+			var renderer;
+
+			var mesh, zmesh, geometry;
+
+			var textureCube;
+			var cameraCube, sceneCube;
+
+			var mouseX = 0, mouseY = 0;
+
+			var windowHalfX = window.innerWidth / 2;
+			var windowHalfY = window.innerHeight / 2;
+
+			var render_gl = 1;
+			var has_gl = 0;
+
+			document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+
+			init();
+			animate();
+
+
+			function init() {
+
+				container = document.createElement( 'div' );
+				document.body.appendChild( container );
+
+				// CAMERA
+
+				camera = new THREE.PerspectiveCamera( 25, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 10000 );
+				camera.position.set( 185, 40, 170 );
+
+				controls = new THREE.TrackballControls( camera );
+				controls.dynamicDampingFactor = 0.25;
+
+				// SCENE
+
+				scene = new THREE.Scene();
+
+				// SKYBOX
+
+				sceneCube = new THREE.Scene();
+				cameraCube = new THREE.PerspectiveCamera( 25, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 10000 );
+				sceneCube.add( cameraCube );
+
+				var r = "http://threejs.org/examples/textures/cube/pisa/";
+				var urls = [ r + "px.png", r + "nx.png",
+							 r + "py.png", r + "ny.png",
+							 r + "pz.png", r + "nz.png" ];
+
+
+				textureCube = THREE.ImageUtils.loadTextureCube( urls );
+
+				var shader = THREE.ShaderLib[ "cube" ];
+				shader.uniforms[ "tCube" ].value = textureCube;
+
+				var material = new THREE.ShaderMaterial( {
+
+					fragmentShader: shader.fragmentShader,
+					vertexShader: shader.vertexShader,
+					uniforms: shader.uniforms,
+					depthWrite: false,
+					side: THREE.BackSide
+
+				} ),
+
+				mesh = new THREE.Mesh( new THREE.CubeGeometry( 100, 100, 100 ), material );
+				sceneCube.add( mesh );
+
+				// LIGHTS
+
+				var light = new THREE.PointLight( 0xffffff, 1 );
+				light.position.set( 2, 5, 1 );
+				light.position.multiplyScalar( 30 );
+				scene.add( light );
+
+				var light = new THREE.PointLight( 0xffffff, 0.75 );
+				light.position.set( -12, 4.6, 2.4 );
+				light.position.multiplyScalar( 30 );
+				scene.add( light );
+
+				scene.add( new THREE.AmbientLight( 0x050505 ) );
+
+				// RENDERER
+
+				renderer = new THREE.WebGLRenderer( { antialias: true, clearColor: 0xffffff, clearAlpha: 1 } );
+				renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
+				renderer.domElement.style.position = "relative";
+
+				renderer.autoClear = false;
+
+				container.appendChild( renderer.domElement );
+
+				//
+
+				renderer.gammaInput = true;
+				renderer.gammaOutput = true;
+				renderer.physicallyBasedShading = true;
+
+				// EVENTS
+
+				window.addEventListener( 'resize', onWindowResize, false );
+				window.addEventListener( 'mousemove', onDocumentMouseMove, false );
+
+				// GROUND
+
+				var x = document.createElement( "canvas" );
+				var xc = x.getContext("2d");
+				x.width = x.height = 128;
+				xc.fillStyle = "#fff";
+				xc.fillRect(0, 0, 128, 128);
+				xc.fillStyle = "#000";
+				xc.fillRect(0, 0, 64, 64);
+				xc.fillStyle = "#999";
+				xc.fillRect(32, 32, 32, 32);
+				xc.fillStyle = "#000";
+				xc.fillRect(64, 64, 64, 64);
+				xc.fillStyle = "#555";
+				xc.fillRect(96, 96, 32, 32);
+
+				var xm = new THREE.MeshBasicMaterial( { map: new THREE.Texture( x, new THREE.UVMapping(), THREE.RepeatWrapping, THREE.RepeatWrapping ) } );
+				xm.map.needsUpdate = true;
+				xm.map.repeat.set( 10, 10 );
+
+				geometry = new THREE.PlaneGeometry( 100, 100, 15, 10 );
+
+				mesh = new THREE.Mesh( geometry, xm );
+				mesh.position.set( 0, FLOOR, 0 );
+				mesh.rotation.x = - Math.PI / 2;
+				mesh.scale.set( 10, 10, 10 );
+				scene.add( mesh );
+				
+
+				var loader = new THREE.JSONLoader();
+				
+				loader.load( "camaro/Camaro.js", function ( geometry, materials ) { 
+					// set opacity 
+					for( var i in materials ){
+						// limit to only the leaves?
+						materials[i].transparent = true;
+					}
+					createScene( geometry, materials, 0, FLOOR, 50, 105 ) 
+				});
+				
+				
+			}
+
+			function createScene( geometry, materials, x, y, z, b ) {
+
+				zmesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
+				zmesh.position.set( x, y, z );
+				zmesh.scale.set( 3, 3, 3 );
+				scene.add( zmesh );
+
+				createMaterialsPalette( materials, 100, b );
+
+			}
+
+			function createMaterialsPalette( materials, size, bottom ) {
+
+				for ( var i = 0; i < materials.length; i ++ ) {
+
+					// material
+
+					mesh = new THREE.Mesh( new THREE.PlaneGeometry( size, size ), materials[i] );
+					mesh.position.x = i * (size + 5) - ( ( materials.length - 1 )* ( size + 5 )/2);
+					mesh.position.y = FLOOR + size/2 + bottom;
+					mesh.position.z = -100;
+					scene.add( mesh );
+
+					// number
+
+					var x = document.createElement( "canvas" );
+					var xc = x.getContext( "2d" );
+					x.width = x.height = 128;
+					xc.shadowColor = "#000";
+					xc.shadowBlur = 7;
+					xc.fillStyle = "orange";
+					xc.font = "50pt arial bold";
+					xc.fillText( i, 10, 64 );
+
+					var xm = new THREE.MeshBasicMaterial( { map: new THREE.Texture( x ), transparent: true } );
+					xm.map.needsUpdate = true;
+
+					mesh = new THREE.Mesh( new THREE.PlaneGeometry( size, size ), xm );
+					mesh.position.x = i * ( size + 5 ) - ( ( materials.length - 1 )* ( size + 5 )/2);
+					mesh.position.y = FLOOR + size/2 + bottom;
+					mesh.position.z = -99;
+					scene.add( mesh );
+
+				}
+
+			}
+
+			//
+
+			function onWindowResize( event ) {
+
+				SCREEN_WIDTH = window.innerWidth;
+				SCREEN_HEIGHT = window.innerHeight;
+
+				renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
+
+				camera.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+				camera.updateProjectionMatrix();
+
+				cameraCube.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+				cameraCube.updateProjectionMatrix();
+
+			}
+
+
+			function onDocumentMouseMove(event) {
+
+				mouseX = ( event.clientX - windowHalfX );
+				mouseY = ( event.clientY - windowHalfY );
+
+			}
+
+			//
+
+			function animate() {
+
+				requestAnimationFrame( animate );
+
+				render();
+
+			}
+
+			function render() {
+
+				controls.update();
+
+				cameraCube.rotation.copy( camera.rotation );
+
+				renderer.clear();
+				renderer.render( sceneCube, cameraCube );
+				renderer.render( scene, camera );
+				
+			}
+
+		</script>
+
+	</body>
+</html>
