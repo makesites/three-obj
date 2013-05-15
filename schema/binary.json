@@ -14,7 +14,7 @@
     },
 
 	"materials": {{materials}},
-	
+
 	"buffers": "{{buffers}}"
-	
+
 }
