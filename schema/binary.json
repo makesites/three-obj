@@ -1,17 +1,17 @@
 {
 
-    "metadata" :
-    {
-        "formatVersion" : {{version}},
-        "sourceFile"    : "{{files}}",
-        "generatedBy"   : "{{generator}}",
-        "vertices"      : {{verticesCount}},
-        "faces"         : {{faceCount}},
-        "normals"       : {{normalCount}},
-        "colors"        : {{colorCount}},
-        "uvs"           : {{uvCount}},
-        "materials"     : {{materialCount}}
-    },
+	"metadata" :
+	{
+		"formatVersion" : {{version}},
+		"sourceFile"    : "{{files}}",
+		"generatedBy"   : "{{generator}}",
+		"vertices"      : {{verticesCount}},
+		"faces"         : {{faceCount}},
+		"normals"       : {{normalCount}},
+		"colors"        : {{colorCount}},
+		"uvs"           : {{uvCount}},
+		"materials"     : {{materialCount}}
+	},
 
 	"materials": {{materials}},
 

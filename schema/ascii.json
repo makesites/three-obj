@@ -1,34 +1,34 @@
 {
 
-    "metadata" :
-    {
-        "formatVersion" : {{version}},
-        "sourceFile"    : "{{files}}",
-        "generatedBy"   : "{{generator}}",
-        "vertices"      : {{verticesCount}},
-        "faces"         : {{faceCount}},
-        "normals"       : {{normalCount}},
-        "colors"        : {{colorCount}},
-        "uvs"           : {{uvCount}},
-        "materials"     : {{materialCount}}
-    },
+	"metadata" :
+	{
+		"formatVersion" : {{version}},
+		"sourceFile"    : "{{files}}",
+		"generatedBy"   : "{{generator}}",
+		"vertices"      : {{verticesCount}},
+		"faces"         : {{faceCount}},
+		"normals"       : {{normalCount}},
+		"colors"        : {{colorCount}},
+		"uvs"           : {{uvCount}},
+		"materials"     : {{materialCount}}
+	},
 
-    "scale" : {{scale}},
+	"scale" : {{scale}},
 
-    "materials": {{materials}},
+	"materials": {{materials}},
 
-    "vertices": [{{vertices}}],
+	"vertices": [{{vertices}}],
 
-    "morphTargets": [{{morphTargets}}],
+	"morphTargets": [{{morphTargets}}],
 
-    "morphColors": [{{morphColors}}],
+	"morphColors": [{{morphColors}}],
 
-    "normals": [{{normals}}],
+	"normals": [{{normals}}],
 
-    "colors": [{{colors}}],
+	"colors": [{{colors}}],
 
-    "uvs": [[{{uvs}}]],
+	"uvs": [[{{uvs}}]],
 
-    "faces": [{{faces}}]
+	"faces": [{{faces}}]
 
 }
