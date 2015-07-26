@@ -5,10 +5,12 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<style>
-			body {
-				background:#fff;
+			html, body{
 				padding:0;
 				margin:0;
+			}
+			body {
+				background:#fff;
 				overflow:hidden;
 				font-family:georgia;
 				text-align:center;
@@ -17,7 +19,7 @@
 			a { color:darkblue }
 			canvas { pointer-events:none; z-index:10; }
 
-			#d { text-align:center; margin:1em 0 -9.2em 0; z-index:0; position:relative; display:block }
+			#d { text-align:center; margin:1em 0 -9.2em 0; z-index:0; position:absolute; display:block; left: 0; right: 0; }
 			.button { background:#000; color:#fff; padding:0.2em 0.5em; cursor:pointer }
 			.inactive { background:#999; color:#eee }
 		</style>
@@ -30,7 +32,7 @@
 			<p>Module by <a href="http://makesites.org">Makesites</a> - Model by <a href="http://blog.dreamway.co">Dreamway</a>.
 		</div>
 
-		<script src="//cdnjs.cloudflare.com/ajax/libs/three.js/r57/three.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.min.js"></script>
 
 		<script>
 
@@ -85,11 +87,11 @@
 				xc.fillStyle = "#555";
 				xc.fillRect(96, 96, 32, 32);
 
-				var xm = new THREE.MeshBasicMaterial( { map: new THREE.Texture( x, new THREE.UVMapping(), THREE.RepeatWrapping, THREE.RepeatWrapping ) } );
+				var xm = new THREE.MeshBasicMaterial( { map: new THREE.Texture( x, THREE.UVMapping, THREE.RepeatWrapping, THREE.RepeatWrapping ) } );
 				xm.map.needsUpdate = true;
 				xm.map.repeat.set( 10, 10 );
 
-				geometry = new THREE.PlaneGeometry( 100, 100, 15, 10 );
+				geometry = new THREE.PlaneBufferGeometry( 100, 100, 15, 10 );
 
 				mesh = new THREE.Mesh( geometry, xm );
 				mesh.position.set( 0, FLOOR, 0 );
@@ -112,7 +114,7 @@
 
 				try {
 
-					webglRenderer = new THREE.WebGLRenderer();
+					webglRenderer = new THREE.WebGLRenderer({ alpha: true });
 					webglRenderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
 					webglRenderer.domElement.style.position = "relative";
 
@@ -124,20 +126,20 @@
 				catch (e) {
 				}
 
-				
+
 
 				var loader = new THREE.JSONLoader();
-				
-				loader.load( "ascii/palm.js", function ( geometry, materials ) { 
-					// set opacity 
+
+				loader.load( "ascii/palm.js", function ( geometry, materials ) {
+					// set opacity
 					for( var i in materials ){
 						// limit to only the leaves?
 						materials[i].transparent = true;
 					}
-					createScene( geometry, materials, 0, FLOOR, 50, 105 ) 
+					createScene( geometry, materials, 0, FLOOR, 50, 105 )
 				});
-				
-				
+
+
 			}
 
 			function createScene( geometry, materials, x, y, z, b ) {
@@ -157,7 +159,7 @@
 
 					// material
 
-					mesh = new THREE.Mesh( new THREE.PlaneGeometry( size, size ), materials[i] );
+					mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( size, size ), materials[i] );
 					mesh.position.x = i * (size + 5) - ( ( materials.length - 1 )* ( size + 5 )/2);
 					mesh.position.y = FLOOR + size/2 + bottom;
 					mesh.position.z = -100;
@@ -177,7 +179,7 @@
 					var xm = new THREE.MeshBasicMaterial( { map: new THREE.Texture( x ), transparent: true } );
 					xm.map.needsUpdate = true;
 
-					mesh = new THREE.Mesh( new THREE.PlaneGeometry( size, size ), xm );
+					mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( size, size ), xm );
 					mesh.position.x = i * ( size + 5 ) - ( ( materials.length - 1 )* ( size + 5 )/2);
 					mesh.position.y = FLOOR + size/2 + bottom;
 					mesh.position.z = -99;
@@ -212,7 +214,7 @@
 				camera.lookAt( scene.position );
 
 				webglRenderer.render( scene, camera );
-				
+
 			}
 
 		</script>
