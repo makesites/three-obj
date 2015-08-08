@@ -15,7 +15,7 @@
 		}
 	],
 	"engine" : {
-        "node" : "0.8.x"
+        "node" : ">=0.8.x"
     }, 
 	"dependencies" : {
 		"three": "0.56.x",
